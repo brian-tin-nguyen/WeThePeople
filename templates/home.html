@@ -16,7 +16,9 @@
       </div>
       <h1 class="hero-title">{{ hero.title }}</h1>
       <p class="hero-excerpt">{{ hero.content }}</p>
-      <a href="#" class="cont-link">Continue Reading...</a>
+      <a href="{{url_for('post_page', post_id=hero['id'])}}" class="cont-link"
+        >Continue Reading...</a
+      >
     </div>
     <div class="hero-side">
       {% for post in posts[1:] %}
