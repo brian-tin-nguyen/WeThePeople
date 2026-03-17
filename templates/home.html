@@ -1,0 +1,122 @@
+{% extends "layout.html" %} {% block content %}
+
+<!-- Today Section -->
+<section class="section-block">
+  <div class="section-header">
+    <h2 class="section-title">Today</h2>
+    <a href="#" class="view-all-btn">View All &rsaquo;</a>
+  </div>
+  <div class="hero-grid">
+    {% if posts %} {% set hero = posts[0] %}
+    <div class="hero-main">
+      <div class="placeholder-img tall"></div>
+      <div class="meta-row">
+        <span class="cat-tag">Tutorial</span>
+        <span class="post-date">{{ hero.date_posted }}</span>
+      </div>
+      <h1 class="hero-title">{{ hero.title }}</h1>
+      <p class="hero-excerpt">{{ hero.content }}</p>
+      <a href="#" class="cont-link">Continue Reading...</a>
+    </div>
+    <div class="hero-side">
+      {% for post in posts[1:] %}
+      <div class="side-card">
+        <div class="meta-row">
+          <span class="cat-tag">Python</span>
+          <span class="post-date">{{ post.date_posted }}</span>
+        </div>
+        <h3 class="side-title">{{ post.title }}</h3>
+        <p class="side-excerpt">{{ post.content }}</p>
+        <a href="#" class="cont-link">Continue Reading...</a>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- Trending Section -->
+<section class="section-block">
+  <div class="section-header">
+    <h2 class="section-title">Trending</h2>
+  </div>
+  <div class="trending-grid">
+    {% for post in posts %}
+    <div class="trend-card">
+      <div class="placeholder-img medium"></div>
+      <div class="meta-row">
+        <span class="cat-tag">FastAPI</span>
+        <span class="post-date">{{ post.date_posted }}</span>
+      </div>
+      <h3 class="trend-title">{{ post.title }}</h3>
+      <p class="trend-excerpt">{{ post.content }}</p>
+      <a href="#" class="cont-link">Continue Reading...</a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- Must Read Section -->
+<section class="section-block">
+  <div class="section-header">
+    <h2 class="section-title">Must Read</h2>
+  </div>
+  <div class="must-grid">
+    {% for post in posts %}
+    <div class="must-item">
+      <span class="must-num">{{ loop.index }}</span>
+      <a href="#" class="must-title">{{ post.title }}</a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- All Post Section -->
+<section class="section-block">
+  <div class="section-header">
+    <h2 class="section-title">All Posts</h2>
+    <a href="#" class="view-all-btn">View All &rsaquo;</a>
+  </div>
+  <div class="all-grid">
+    {% if posts %} {% set featured = posts[0] %}
+    <div class="all-featured">
+      <div class="placeholder-img tall"></div>
+      <div class="meta-row">
+        <span class="cat-tag">Tutorial</span>
+        <span class="post-date">{{ featured.date_posted }}</span>
+      </div>
+      <h3 class="all-feat-title">{{ featured.title }}</h3>
+      <p class="all-feat-excerpt">{{ featured.content }}</p>
+      <a href="#" class="cont-link">Continue Reading...</a>
+    </div>
+    <div class="all-list">
+      {% for post in posts %}
+      <div class="all-item">
+        <div class="all-item-body">
+          <div class="meta-row">
+            <span class="cat-tag">Python</span>
+            <span class="post-date">{{ post.date_posted }}</span>
+          </div>
+          <h4 class="all-item-title">{{ post.title }}</h4>
+          <p class="all-item-excerpt">{{ post.content }}</p>
+          <a href="#" class="cont-link">Continue Reading...</a>
+        </div>
+        <div class="placeholder-img thumb"></div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<div class="load-more-row">
+  <a href="#" class="load-more-btn">Load More Posts</a>
+</div>
+
+{% endblock content %}

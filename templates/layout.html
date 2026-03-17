@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {% if title %}
+    <title>WeThePeople Blog - {{ title }}</title>
+    {% else %}
+    <title>WeThePeople Blog</title>
+    {% endif %}
+    <meta name="description" content="FastAPI WeThePeople" />
+    <meta name="author" content="Brian" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{url_for('static', path='css/main.css')}}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar Section -->
+    <nav class="navbar">
+      <div class="nav-inner">
+        <div class="nav-left">
+          <a class="nav-brand" href="{{url_for('home')}}">WeThePeople</a>
+          <div class="nav-links">
+            <a href="{{url_for('home')}}" class="nav-link active">Home</a>
+            <a href="#" class="nav-link">Tutorials</a>
+            <a href="#" class="nav-link">Python</a>
+            <a href="#" class="nav-link">Projects</a>
+            <a href="#" class="nav-link">Tools</a>
+            <a href="#" class="nav-link">About</a>
+          </div>
+        </div>
+        <div class="nav-right">
+          <a href="#" class="btn-login">Login</a>
+          <a href="#" class="btn-register">Register</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Ticker Bar Section -->
+    <div class="ticker-bar">
+      <div class="ticker-inner">
+        <span class="ticker-date" id="ticker-date"></span>
+        <div class="ticker-tags">
+          <span>FastAPI</span>
+          <span>Python</span>
+          <span>Bootstrap</span>
+          <span>uv</span>
+          <span>Jinja2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Section -->
+    <main class="main-content">
+      <div class="container">{% block content %}{% endblock content %}</div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-brand">WeThePeople</div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <div class="footer-heading">Sections</div>
+            <a href="{{url_for('home')}}">Home</a>
+            <a href="#">Tutorials</a>
+            <a href="#">Python</a>
+            <a href="#">Projects</a>
+            <a href="#">Tools</a>
+            <a href="#">About</a>
+          </div>
+          <div class="footer-col">
+            <div class="footer-heading">Support</div>
+            <a href="#">Help / FAQ</a>
+            <a href="#">Feedback</a>
+          </div>
+          <div class="footer-col">
+            <div class="footer-heading">About</div>
+            <a href="#">Contact</a>
+            <a href="#">Terms of Use</a>
+            <a href="#">Privacy Policy</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          &copy; <span id="year"></span> WeThePeople. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      const d = new Date();
+      const days = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+      const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      const h = d.getHours() % 12 || 12;
+      const mins = d.getMinutes().toString().padStart(2, "0");
+      const ampm = d.getHours() >= 12 ? "PM" : "AM";
+      document.getElementById("ticker-date").textContent =
+        `${days[d.getDay()]}  ${h}:${mins} ${ampm}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    </script>
+  </body>
+</html>
