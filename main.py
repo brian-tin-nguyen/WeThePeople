@@ -1,13 +1,18 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from fastapi.responses import FileResponse
+from app.database import engine, Base
+from app.routers import users, posts
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# Serve files from the /static
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# ---------------- Endpoint ----------------
+app.include_router(users.router)
+app.include_router(posts.router)
+
 @app.get("/")
 def root():
-    return {"message": "WeThePeople is running!"}
+    return FileResponse("templates/index.html")
