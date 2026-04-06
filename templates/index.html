@@ -73,7 +73,9 @@
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
           </svg>
         </button>
-        <button class="login-btn">Login</button>
+        <button class="login-btn" onclick="window.location.href = '/login'">
+          Login
+        </button>
       </div>
     </header>
 
@@ -396,6 +398,27 @@
       }
 
       loadPosts();
+
+      // Update header based on auth state
+      // If token exists in localStorage, show Logout button
+      // If no token, show Login button that redirects to /login
+      function updateHeader() {
+        const token = localStorage.getItem("token");
+        const loginBtn = document.querySelector(".login-btn");
+
+        if (token) {
+          loginBtn.textContent = "Logout";
+          loginBtn.onclick = () => {
+            localStorage.removeItem("token");
+            window.location.reload();
+          };
+        } else {
+          loginBtn.textContent = "Login";
+          loginBtn.onclick = () => (window.location.href = "/login");
+        }
+      }
+
+      updateHeader();
     </script>
   </body>
 </html>

@@ -13,6 +13,16 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(users.router)
 app.include_router(posts.router)
 
+# Home
 @app.get("/")
 def root():
     return FileResponse("templates/index.html")
+
+# Login
+@app.get("/login")
+def login_page():
+    return FileResponse("templates/login.html")
+
+@app.get("/register")
+def register_page():
+    return FileResponse("templates/register.html")

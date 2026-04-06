@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register — WeThePeople</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="header-left">
+        <a class="site-title" href="/">WeThePeople</a>
+      </div>
+    </header>
+
+    <main style="max-width: 400px; margin: 80px auto; padding: 0 24px">
+      <h1
+        style="
+          font-family: &quot;Playfair Display&quot;, serif;
+          margin-bottom: 8px;
+        "
+      >
+        Create an account
+      </h1>
+      <p style="color: var(--text-muted); margin-bottom: 32px">
+        Join WeThePeople
+      </p>
+
+      <div
+        id="error-msg"
+        style="display: none; color: red; margin-bottom: 16px"
+      ></div>
+      <div
+        id="success-msg"
+        style="display: none; color: green; margin-bottom: 16px"
+      ></div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <div>
+          <label style="display: block; margin-bottom: 6px; font-weight: 500"
+            >Username</label
+          >
+          <input
+            id="username"
+            type="text"
+            placeholder="Choose a username"
+            style="
+              width: 100%;
+              padding: 10px 14px;
+              border: 1px solid var(--border);
+              border-radius: 6px;
+              font-size: 0.95rem;
+              box-sizing: border-box;
+            "
+          />
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 6px; font-weight: 500"
+            >Password</label
+          >
+          <input
+            id="password"
+            type="password"
+            placeholder="Choose a password"
+            style="
+              width: 100%;
+              padding: 10px 14px;
+              border: 1px solid var(--border);
+              border-radius: 6px;
+              font-size: 0.95rem;
+              box-sizing: border-box;
+            "
+          />
+        </div>
+        <button
+          onclick="register()"
+          style="
+            padding: 10px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+          "
+        >
+          Create Account
+        </button>
+      </div>
+
+      <p style="margin-top: 24px; color: var(--text-muted); font-size: 0.9rem">
+        Already have an account? <a href="/login">Sign in</a>
+      </p>
+    </main>
+
+    <script>
+      async function register() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const errorMsg = document.getElementById("error-msg");
+        const successMsg = document.getElementById("success-msg");
+
+        try {
+          const res = await fetch("/users/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+          });
+
+          if (!res.ok) {
+            const data = await res.json();
+            errorMsg.style.display = "block";
+            errorMsg.textContent = data.detail || "Registration failed.";
+            return;
+          }
+
+          successMsg.style.display = "block";
+          successMsg.textContent = "Account created! Redirecting to login...";
+          setTimeout(() => (window.location.href = "/login"), 1500);
+        } catch (err) {
+          errorMsg.style.display = "block";
+          errorMsg.textContent = "Something went wrong. Try again.";
+        }
+      }
+    </script>
+  </body>
+</html>
