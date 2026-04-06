@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException
@@ -6,8 +8,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User
 
-# Secret key — used to sign tokens (keep this private in real apps)
-SECRET_KEY = "changethislater"
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

@@ -161,6 +161,7 @@
           <div style="display: flex; align-items: baseline; gap: 12px">
             <h2 class="section-title">Latest Posts</h2>
             <span
+              id="posts-count"
               style="
                 font-size: 0.75rem;
                 color: var(--text-muted);
@@ -172,7 +173,7 @@
           <a href="#" class="view-all">View all →</a>
         </div>
 
-        <div class="card-grid">
+        <div class="card-grid" id="posts-grid">
           <!-- Row 1 -->
           <div class="card">
             <div class="card-img card-img-code" style="height: 140px"></div>
@@ -304,7 +305,7 @@
       <div class="footer-inner">
         <div class="footer-top">
           <div class="footer-brand">
-            <span class="site-title-footer">Astro News</span>
+            <span class="site-title-footer">WeThePeople</span>
             <p class="footer-tagline">
               Thoughtful articles on technology, programming, lifestyle, and
               more. Written for curious minds.
@@ -335,7 +336,7 @@
         </div>
         <div class="footer-bottom">
           <span class="footer-copy"
-            >© 2026 Astro News. All rights reserved.</span
+            >© 2026 WeThePeople. All rights reserved.</span
           >
           <div class="footer-legal">
             <a href="#">Privacy Policy</a>
@@ -346,8 +347,9 @@
       </div>
     </footer>
 
-    <!---------------- SCRIPTS FOR LIGHT/DARK ---------------->
+    <!---------------- SCRIPTS ---------------->
     <script>
+      // ---- Theme toggle ----------->
       function toggleTheme() {
         const html = document.documentElement;
         const isDark = html.getAttribute("data-theme") === "dark";
@@ -356,6 +358,44 @@
           ? "currentColor"
           : "#60a5fa";
       }
+
+      // ---- Load posts from API ----------->
+      async function loadPosts() {
+        const grid = document.getElementById("posts-grid");
+        const countEl = document.getElementById("posts-count");
+
+        try {
+          const res = await fetch("/posts/");
+          const posts = await res.json();
+
+          // Update the count
+          countEl.textContent = `${posts.length} posts`;
+
+          // Build cards from real data ----------->
+          grid.innerHTML = posts
+            .map(
+              (post) => `
+        <div class="card">
+          <div class="card-img card-img-code" style="height: 140px"></div>
+          <div class="card-body">
+            <div class="card-title">${post.title}</div>
+            <div class="card-desc">${post.body || ""}</div>
+            <div class="card-meta">
+              <span class="tag">General</span>
+              <span class="read-time">${new Date(post.created_at).toLocaleDateString()}</span>
+            </div>
+          </div>
+        </div>
+      `,
+            )
+            .join("");
+        } catch (err) {
+          grid.innerHTML = "<p>Could not load posts.</p>";
+          console.error(err);
+        }
+      }
+
+      loadPosts();
     </script>
   </body>
 </html>
