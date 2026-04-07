@@ -2,22 +2,20 @@
 Without this the app has no memory. everytime it restarts, the data is gone.
 database.py helps connects app to real DB.
 
-Start SQLite then switch PostgreSQL later
+# Tells SQLAlchemy WHERE the database is
 
 install sqlalchemy: uv add sqlalchemy asyncpg
 '''
-
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
 # Tell SQLAlchemy WHERE the database file is
-DATABASE_URL = "sqlite:///./wethepeople.db"
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:password@localhost:5432/wethepeople")
 
 # This Create the "engine" (actual connection to the DB)
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(DATABASE_URL)
 
-# This is where we create a session factory a "session" is like a temporary workspace
-#    where you make changes before saving them to the DB
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base class models will inherit from this

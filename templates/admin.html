@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — WeThePeople</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="header-left">
+        <a class="site-title" href="/">WeThePeople</a>
+      </div>
+      <div class="header-right">
+        <button class="login-btn" onclick="logout()">Logout</button>
+      </div>
+    </header>
+
+    <main style="max-width: 700px; margin: 60px auto; padding: 0 24px">
+      <h1
+        style="
+          font-family: &quot;Playfair Display&quot;, serif;
+          margin-bottom: 8px;
+        "
+      >
+        New Post
+      </h1>
+      <p style="color: var(--text-muted); margin-bottom: 32px">
+        Write and publish a new article
+      </p>
+
+      <div
+        id="error-msg"
+        style="display: none; color: red; margin-bottom: 16px"
+      ></div>
+      <div
+        id="success-msg"
+        style="display: none; color: green; margin-bottom: 16px"
+      ></div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <div>
+          <label style="display: block; margin-bottom: 6px; font-weight: 500"
+            >Title</label
+          >
+          <input
+            id="title"
+            type="text"
+            placeholder="Post title"
+            style="
+              width: 100%;
+              padding: 10px 14px;
+              border: 1px solid var(--border);
+              border-radius: 6px;
+              font-size: 0.95rem;
+              box-sizing: border-box;
+            "
+          />
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 6px; font-weight: 500"
+            >Body</label
+          >
+          <textarea
+            id="body"
+            rows="10"
+            placeholder="Write your post here..."
+            style="
+              width: 100%;
+              padding: 10px 14px;
+              border: 1px solid var(--border);
+              border-radius: 6px;
+              font-size: 0.95rem;
+              box-sizing: border-box;
+              resize: vertical;
+            "
+          ></textarea>
+        </div>
+        <button
+          onclick="publishPost()"
+          style="
+            padding: 10px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+          "
+        >
+          Publish Post
+        </button>
+      </div>
+    </main>
+
+    <script>
+      // Redirect to login if not authenticated
+      const token = localStorage.getItem("token");
+      if (!token) window.location.href = "/login";
+
+      function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+      }
+
+      async function publishPost() {
+        const title = document.getElementById("title").value;
+        const body = document.getElementById("body").value;
+        const errorMsg = document.getElementById("error-msg");
+        const successMsg = document.getElementById("success-msg");
+
+        try {
+          const res = await fetch("/posts/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Attach JWT token
+            },
+            body: JSON.stringify({ title, body }),
+          });
+
+          if (!res.ok) {
+            errorMsg.style.display = "block";
+            errorMsg.textContent = "Failed to publish. Are you logged in?";
+            return;
+          }
+
+          successMsg.style.display = "block";
+          successMsg.textContent = "Post published! Redirecting...";
+          setTimeout(() => (window.location.href = "/"), 1500);
+        } catch (err) {
+          errorMsg.style.display = "block";
+          errorMsg.textContent = "Something went wrong. Try again.";
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -23,6 +23,12 @@ def root():
 def login_page():
     return FileResponse("templates/login.html")
 
+# Register
 @app.get("/register")
 def register_page():
     return FileResponse("templates/register.html")
+
+# Admin 
+@app.get("/admin")
+def admin_page():
+    return FileResponse("templates/admin.html")
