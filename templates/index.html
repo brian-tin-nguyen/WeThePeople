@@ -176,128 +176,7 @@
         </div>
 
         <div class="card-grid" id="posts-grid">
-          <!-- Row 1 -->
-          <div class="card">
-            <div class="card-img card-img-code" style="height: 140px"></div>
-            <div class="card-body">
-              <div class="card-title">
-                Why Does this Hate Me? Demystifying JavaScript's this
-              </div>
-              <div class="card-desc">
-                Why JavaScript's keyword breaks brains and hearts — explained
-                with relatable memes.
-              </div>
-              <div class="card-meta">
-                <span class="tag">Programming</span>
-                <span class="read-time">1 min read</span>
-                <span class="post-stats">
-                  <span class="stat-item">👁 2.4k</span>
-                  <span class="stat-item">💬 38</span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-img card-img-math" style="height: 140px"></div>
-            <div class="card-body">
-              <div class="card-title">JavaScript Math is a Lie</div>
-              <div class="card-desc">
-                A hilariously painful journey through floating point math in
-                JavaScript. Yes, 0.1 + 0.2 ≠ 0.3.
-              </div>
-              <div class="card-meta">
-                <span class="tag">Programming</span>
-                <span class="read-time">1 min read</span>
-                <span class="post-stats">
-                  <span class="stat-item">👁 1.8k</span>
-                  <span class="stat-item">💬 21</span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-img card-img-robot" style="height: 140px"></div>
-            <div class="card-body">
-              <div class="card-title">A Functions Existential Crisis</div>
-              <div class="card-desc">
-                A lighthearted guide to recursion — aka that thing you call
-                within itself until it forgets why it started.
-              </div>
-              <div class="card-meta">
-                <span class="tag">Programming</span>
-                <span class="read-time">1 min read</span>
-                <span class="post-stats">
-                  <span class="stat-item">👁 3.1k</span>
-                  <span class="stat-item">💬 54</span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-------- 2nd Row -------->
-          <div class="card">
-            <div class="card-img card-img-promises" style="height: 140px"></div>
-            <div class="card-body">
-              <div class="card-title">
-                Promises in JavaScript: Trust Issues in Code
-              </div>
-              <div class="card-desc">
-                An absurdly fun breakdown of promises, async/await, and why your
-                code never waits when you want it to.
-              </div>
-              <div class="card-meta">
-                <span class="tag">Programming</span>
-                <span class="read-time">1 min read</span>
-                <span class="post-stats">
-                  <span class="stat-item">👁 976</span>
-                  <span class="stat-item">💬 12</span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-img card-img-wardrobe" style="height: 140px"></div>
-            <div class="card-body">
-              <div class="card-title">How to Build a Capsule Wardrobe</div>
-              <div class="card-desc">
-                Streamline your wardrobe with timeless pieces that suit your
-                style.
-              </div>
-              <div class="card-meta">
-                <span class="tag">Wellness</span>
-                <span class="read-time">1 min read</span>
-                <span class="post-stats">
-                  <span class="stat-item">👁 1.2k</span>
-                  <span class="stat-item">💬 9</span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div
-              class="card-img card-img-meditation"
-              style="height: 140px"
-            ></div>
-            <div class="card-body">
-              <div class="card-title">
-                Exploring the Benefits of Daily Meditation
-              </div>
-              <div class="card-desc">
-                Discover how a daily meditation practice can improve your mental
-                clarity and well-being.
-              </div>
-              <div class="card-meta">
-                <span class="tag" style="background: #f0fdf4; color: #16a34a"
-                  >Wellness</span
-                >
-                <span class="read-time">1 min read</span>
-                <span class="post-stats">
-                  <span class="stat-item">👁 890</span>
-                  <span class="stat-item">💬 7</span>
-                </span>
-              </div>
-            </div>
-          </div>
+          <!-- Cards are injected here by loadPosts() -->
         </div>
       </section>
     </main>
@@ -373,21 +252,23 @@
           // Update the count
           countEl.textContent = `${posts.length} posts`;
 
-          // Build cards from real data ----------->
+          // Build cards from real data — each wrapped in a link to /post/{id}
           grid.innerHTML = posts
             .map(
               (post) => `
-        <div class="card">
-          <div class="card-img card-img-code" style="height: 140px"></div>
-          <div class="card-body">
-            <div class="card-title">${post.title}</div>
-            <div class="card-desc">${post.body || ""}</div>
-            <div class="card-meta">
-              <span class="tag">General</span>
-              <span class="read-time">${new Date(post.created_at).toLocaleDateString()}</span>
+        <a href="/post/${post.id}" style="text-decoration: none; color: inherit;">
+          <div class="card">
+            <div class="card-img card-img-code" style="height: 140px"></div>
+            <div class="card-body">
+              <div class="card-title">${post.title}</div>
+              <div class="card-desc">${post.body || ""}</div>
+              <div class="card-meta">
+                <span class="tag">General</span>
+                <span class="read-time">${new Date(post.created_at).toLocaleDateString()}</span>
+              </div>
             </div>
           </div>
-        </div>
+        </a>
       `,
             )
             .join("");
@@ -399,19 +280,29 @@
 
       loadPosts();
 
-      // Update header based on auth state
-      // If token exists in localStorage, show Logout button
-      // If no token, show Login button that redirects to /login
+      // ---- Update header based on auth state ----------->
       function updateHeader() {
         const token = localStorage.getItem("token");
         const loginBtn = document.querySelector(".login-btn");
 
         if (token) {
-          loginBtn.textContent = "Logout";
-          loginBtn.onclick = () => {
-            localStorage.removeItem("token");
-            window.location.reload();
-          };
+          // Show Admin button + Logout button
+          loginBtn.textContent = "Admin";
+          loginBtn.onclick = () => (window.location.href = "/admin");
+
+          // Add Logout button next to Admin if it doesn't exist yet
+          if (!document.getElementById("logout-btn")) {
+            const logoutBtn = document.createElement("button");
+            logoutBtn.id = "logout-btn";
+            logoutBtn.className = "login-btn";
+            logoutBtn.textContent = "Logout";
+            logoutBtn.style.marginLeft = "8px";
+            logoutBtn.onclick = () => {
+              localStorage.removeItem("token");
+              window.location.reload();
+            };
+            loginBtn.parentElement.appendChild(logoutBtn);
+          }
         } else {
           loginBtn.textContent = "Login";
           loginBtn.onclick = () => (window.location.href = "/login");

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WeThePeople</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="header-left">
+        <button class="hamburger" aria-label="Menu">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <a class="site-title" href="/">WeThePeople</a>
+      </div>
+
+      <div class="header-center">
+        <nav>
+          <a href="/">Home</a>
+          <a href="#">Articles</a>
+          <a href="#">Technology</a>
+          <a href="#">Programming</a>
+          <a href="#">Lifestyle</a>
+          <a href="#">Productivity</a>
+          <a href="#">Health</a>
+          <a href="#">Finance</a>
+        </nav>
+      </div>
+
+      <div class="header-right">
+        <button
+          class="icon-btn"
+          id="themeToggle"
+          aria-label="Toggle theme"
+          onclick="toggleTheme()"
+        >
+          <svg
+            id="sunIcon"
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+        </button>
+        <button class="login-btn" id="header-btn">Login</button>
+      </div>
+    </header>
+
+    <main style="max-width: 700px; margin: 60px auto; padding: 0 24px">
+      <!-- Loading state -->
+      <div id="loading" style="color: var(--text-muted)">
+        Loading article...
+      </div>
+
+      <!-- Article content — hidden until loaded -->
+      <article id="article" style="display: none">
+        <!-- Author controls — only visible when logged in -->
+        <div
+          id="author-controls"
+          style="display: none; gap: 10px; margin-bottom: 24px"
+        >
+          <button
+            onclick="editPost()"
+            style="
+              padding: 7px 16px;
+              background: transparent;
+              border: 1px solid var(--border);
+              border-radius: 6px;
+              font-size: 0.85rem;
+              font-weight: 600;
+              cursor: pointer;
+            "
+          >
+            Edit
+          </button>
+          <button
+            onclick="deletePost()"
+            style="
+              padding: 7px 16px;
+              background: transparent;
+              color: #ef4444;
+              border: 1px solid #ef4444;
+              border-radius: 6px;
+              font-size: 0.85rem;
+              font-weight: 600;
+              cursor: pointer;
+            "
+          >
+            Delete
+          </button>
+        </div>
+
+        <div
+          class="card-img card-img-code"
+          style="height: 260px; border-radius: 10px; margin-bottom: 32px"
+        ></div>
+
+        <div style="margin-bottom: 16px">
+          <span class="tag">General</span>
+        </div>
+
+        <h1
+          id="post-title"
+          style="
+            font-family: &quot;Playfair Display&quot;, serif;
+            font-size: 2.2rem;
+            line-height: 1.25;
+            margin-bottom: 16px;
+          "
+        ></h1>
+
+        <div
+          style="
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 40px;
+          "
+        >
+          <span id="post-date"></span>
+        </div>
+
+        <div
+          id="post-body"
+          style="
+            font-family: &quot;Source Serif 4&quot;, serif;
+            font-size: 1.1rem;
+            line-height: 1.85;
+            color: var(--text);
+          "
+        ></div>
+      </article>
+    </main>
+
+    <script>
+      const token = localStorage.getItem("token");
+
+      // ── Theme toggle ──────────────────────────────────────────────────
+      function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.getAttribute("data-theme") === "dark";
+        html.setAttribute("data-theme", isDark ? "light" : "dark");
+        document.getElementById("sunIcon").style.stroke = isDark
+          ? "currentColor"
+          : "#60a5fa";
+      }
+
+      // ── Update header based on auth state ────────────────────────────
+      function updateHeader() {
+        const btn = document.getElementById("header-btn");
+        if (token) {
+          btn.textContent = "Admin";
+          btn.onclick = () => (window.location.href = "/admin");
+
+          if (!document.getElementById("logout-btn")) {
+            const logoutBtn = document.createElement("button");
+            logoutBtn.id = "logout-btn";
+            logoutBtn.className = "login-btn";
+            logoutBtn.textContent = "Logout";
+            logoutBtn.style.marginLeft = "8px";
+            logoutBtn.onclick = () => {
+              localStorage.removeItem("token");
+              window.location.href = "/";
+            };
+            btn.parentElement.appendChild(logoutBtn);
+          }
+        } else {
+          btn.textContent = "Login";
+          btn.onclick = () => (window.location.href = "/login");
+        }
+      }
+
+      // ── Get post ID from the URL ──────────────────────────────────────
+      // URL is /post/5 — split on "/" and grab the last segment
+      function getPostId() {
+        const parts = window.location.pathname.split("/");
+        return parts[parts.length - 1];
+      }
+
+      // ── Load the post ─────────────────────────────────────────────────
+      async function loadPost() {
+        const postId = getPostId();
+        const res = await fetch(`/posts/${postId}`);
+
+        if (!res.ok) {
+          document.getElementById("loading").textContent = "Post not found.";
+          return;
+        }
+
+        const post = await res.json();
+
+        // Fill in the content
+        document.getElementById("post-title").textContent = post.title;
+        document.getElementById("post-date").textContent = new Date(
+          post.created_at,
+        ).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+        document.getElementById("post-body").textContent = post.body || "";
+        document.title = `${post.title} — WeThePeople`;
+
+        // Show article, hide loading spinner
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("article").style.display = "block";
+
+        // Show Edit/Delete buttons if logged in
+        if (token) {
+          document.getElementById("author-controls").style.display = "flex";
+        }
+
+        // Store post id for delete/edit actions
+        window._postId = post.id;
+      }
+
+      // ── Delete this post ──────────────────────────────────────────────
+      async function deletePost() {
+        if (!confirm("Delete this post? This can't be undone.")) return;
+
+        const res = await fetch(`/posts/${window._postId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.ok) {
+          window.location.href = "/";
+        } else {
+          alert("Could not delete. You may not be the author.");
+        }
+      }
+
+      // ── Edit — redirect to admin for now ─────────────────────────────
+      function editPost() {
+        window.location.href = `/edit/${window._postId}`;
+      }
+
+      updateHeader();
+      loadPost();
+    </script>
+  </body>
+</html>

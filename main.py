@@ -32,3 +32,13 @@ def register_page():
 @app.get("/admin")
 def admin_page():
     return FileResponse("templates/admin.html")
+
+# Individual post page
+@app.get("/post/{post_id}")
+def post_page(post_id: int):
+    return FileResponse("templates/post.html")
+
+# Edit the individual post page
+@app.get("/edit/{post_id}")
+def edit_page(post_id: int):
+    return FileResponse("templates/edit.html")

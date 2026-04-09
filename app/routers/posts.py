@@ -41,3 +41,17 @@ def delete_post(post_id: int, db: Session = Depends(get_db), current_user: User 
     db.delete(post)
     db.commit()
     return {"message": "Post deleted"}
+
+# POST Update - update the post, only admin allowed
+@router.put("/{post_id}", response_model=PostResponse)
+def update_post(post_id: int, post: PostCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    existing = db.query(Post).filter(Post.id == post_id).first()
+    if not existing:
+        raise HTTPException(status_code=404, detail="Post not found")
+    if existing.author_id != current_user.id:
+        raise HTTPException(status_code=403, detail="You can only edit your own posts")
+    existing.title = post.title
+    existing.body = post.body
+    db.commit()
+    db.refresh(existing)
+    return existing
